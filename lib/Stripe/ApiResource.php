@@ -108,7 +108,8 @@ abstract class Stripe_ApiResource extends Stripe_Object
     $opts = Stripe_RequestOptions::parse($options);
     $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = self::_scopedLsb($class, 'classUrl', $class);
-    list($response, $apiKey) = $requestor->request('get', $url, $params, $opts->headers);
+    list($response, $apiKey) = 
+      $requestor->request('get', $url, $params, $opts->headers);
     return Stripe_Util::convertToStripeObject($response, $opts->apiKey);
   }
 
@@ -118,7 +119,8 @@ abstract class Stripe_ApiResource extends Stripe_Object
     $opts = Stripe_RequestOptions::parse($options);
     $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = self::_scopedLsb($class, 'classUrl', $class);
-    list($response, $apiKey) = $requestor->request('post', $url, $params, $opts->headers);
+    list($response, $apiKey) = 
+      $requestor->request('post', $url, $params, $opts->headers);
     return Stripe_Util::convertToStripeObject($response, $opts->apiKey);
   }
 
@@ -126,7 +128,8 @@ abstract class Stripe_ApiResource extends Stripe_Object
   {
     self::_validateCall('save', null, $options);
     $opts = Stripe_RequestOptions::parse($options);
-    $requestor = new Stripe_ApiRequestor($opts->apiKey || $this->_apiKey);
+    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
+    $requestor = new Stripe_ApiRequestor($key);
     $params = $this->serializeParameters();
 
     if (count($params) > 0) {
@@ -141,7 +144,8 @@ abstract class Stripe_ApiResource extends Stripe_Object
   {
     self::_validateCall('delete', $params, $options);
     $opts = Stripe_RequestOptions::parse($options);
-    $requestor = new Stripe_ApiRequestor($opts->apiKey || $this->_apiKey);
+    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
+    $requestor = new Stripe_ApiRequestor($key);
     $url = $this->instanceUrl();
     list($response, $apiKey) = $requestor->request('delete', $url, $params);
     $this->refreshFrom($response, $apiKey);

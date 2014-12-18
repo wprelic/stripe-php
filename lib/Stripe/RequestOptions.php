@@ -16,7 +16,8 @@ class Stripe_RequestOptions
    * @param array|string $options a key => value array
    * @return Options
    */
-  public static function parse($options) {
+  public static function parse($options)
+  {
     if (is_null($options)) {
       return new Stripe_RequestOptions(null, array());
     }

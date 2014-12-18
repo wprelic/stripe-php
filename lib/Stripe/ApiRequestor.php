@@ -102,6 +102,7 @@ class Stripe_ApiRequestor
    * @param string $method
    * @param string $url
    * @param array|null $params
+   * @param array|null $headers
    *
    * @return array An array whose first element is the response and second
    *    element is the API key used to make the request.
