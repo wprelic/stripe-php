@@ -106,12 +106,16 @@ class Stripe_ApiRequestor
    * @return array An array whose first element is the response and second
    *    element is the API key used to make the request.
    */
-  public function request($method, $url, $params=null)
+  public function request($method, $url, $params=null, $headers=null)
   {
-    if (!$params)
+    if (!$params) {
       $params = array();
+    }
+    if (!$headers) {
+      $headers = array();
+    }
     list($rbody, $rcode, $myApiKey) =
-      $this->_requestRaw($method, $url, $params);
+      $this->_requestRaw($method, $url, $params, $headers);
     $resp = $this->_interpretResponse($rbody, $rcode);
     return array($resp, $myApiKey);
   }
@@ -162,11 +166,12 @@ class Stripe_ApiRequestor
     }
   }
 
-  private function _requestRaw($method, $url, $params)
+  private function _requestRaw($method, $url, $params, $headers)
   {
     $myApiKey = $this->_apiKey;
-    if (!$myApiKey)
+    if (!$myApiKey) {
       $myApiKey = Stripe::$apiKey;
+    }
 
     if (!$myApiKey) {
       $msg = 'No API key provided.  (HINT: set your API key using '
@@ -187,19 +192,26 @@ class Stripe_ApiRequestor
         'publisher' => 'stripe',
         'uname' => $uname,
     );
-    $headers = array(
-        'X-Stripe-Client-User-Agent: ' . json_encode($ua),
-        'User-Agent: Stripe/v1 PhpBindings/' . Stripe::VERSION,
-        'Authorization: Bearer ' . $myApiKey,
-        'Content-Type: application/x-www-form-urlencoded',
+    $defaultHeaders = array(
+        'X-Stripe-Client-User-Agent' => json_encode($ua),
+        'User-Agent' => 'Stripe/v1 PhpBindings/' . Stripe::VERSION,
+        'Authorization' => 'Bearer ' . $myApiKey,
+        'Content-Type' => 'application/x-www-form-urlencoded',
     );
     if (Stripe::$apiVersion) {
-      $headers[] = 'Stripe-Version: ' . Stripe::$apiVersion;
+      $defaultHeaders['Stripe-Version'] = Stripe::$apiVersion;
     }
+    $combinedHeaders = array_merge($defaultHeaders, $headers);
+    $rawHeaders = array();
+
+    foreach ($combinedHeaders as $header => $value) {
+      $rawHeaders[] = $header . ': ' . $value;
+    }
+
     list($rbody, $rcode) = $this->_curlRequest(
         $method,
         $absUrl,
-        $headers,
+        $rawHeaders,
         $params
     );
     return array($rbody, $rcode, $myApiKey);
