@@ -28,6 +28,19 @@ abstract class Stripe_ApiResource extends Stripe_Object
   }
 
   /**
+   * @param array options
+   *
+   * @returns Stripe_RequestOptions with either passed in or saved API key
+   */
+  public function parseOptions($options)
+  {
+    $opts = Stripe_RequestOptions::parse($options);
+    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
+    $opts->apiKey = $key;
+    return $opts;
+  }
+
+  /**
    * @param string $class
    *
    * @returns string The name of the class, with namespacing and underscores

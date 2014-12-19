@@ -28,11 +28,14 @@ class Stripe_RequestOptions
 
     if (is_array($options)) {
       $headers = array();
-      $key = $options['apiKey'];
-      if ($options['idempotencyKey']) {
-        $headers['Idempotency-Key'] = $options['idempotencyKey'];
+      $key = null;
+      if (array_key_exists('api_key', $options)) {
+        $key = $options['api_key'];
       }
-      return new Stripe_RequestOptions($options, $headers);
+      if (array_key_exists('idempotency_key', $options)) {
+        $headers['Idempotency-Key'] = $options['idempotency_key'];
+      }
+      return new Stripe_RequestOptions($key, $headers);
     }
 
     throw new Stripe_Error("options must be a string, an array, or null");

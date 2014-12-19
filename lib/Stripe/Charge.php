@@ -54,9 +54,8 @@ class Stripe_Charge extends Stripe_ApiResource
    */
   public function refund($params=null, $options=null)
   {
-    $opts = Stripe_RequestOptions::parse($options);
-    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
-    $requestor = new Stripe_ApiRequestor($key);
+    $opts = $this->parseOptions($options);
+    $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/refund';
     list($response, $apiKey) = 
       $requestor->request('post', $url, $params, $opts->headers);
@@ -71,9 +70,8 @@ class Stripe_Charge extends Stripe_ApiResource
    */
   public function capture($params=null, $options=null)
   {
-    $opts = Stripe_RequestOptions::parse($options);
-    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
-    $requestor = new Stripe_ApiRequestor($key);
+    $opts = $this->parseOptions($options);
+    $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/capture';
     list($response, $apiKey) = 
       $requestor->request('post', $url, $params, $opts->headers);
@@ -88,9 +86,8 @@ class Stripe_Charge extends Stripe_ApiResource
    */
   public function updateDispute($params=null, $option=null)
   {
-    $opts = Stripe_RequestOptions::parse($options);
-    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
-    $requestor = new Stripe_ApiRequestor($key);
+    $opts = $this->parseOptions($options);
+    $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/dispute';
     list($response, $apiKey) = 
       $requestor->request('post', $url, $params, $headers);
@@ -103,9 +100,8 @@ class Stripe_Charge extends Stripe_ApiResource
    */
   public function closeDispute($options=null)
   {
-    $opts = Stripe_RequestOptions::parse($options);
-    $key = ($opts->apiKey ? $opts->apiKey : $this->_apiKey);
-    $requestor = new Stripe_ApiRequestor($key);
+    $opts = $this->parseOptions($options);
+    $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/dispute/close';
     list($response, $apiKey) = 
       $requestor->request('post', $url, null, $opts->headers);
